@@ -1,0 +1,6 @@
+{
+  "name": "MetaTrader 5 EA License Manager",
+  "description": "License management platform for MetaTrader 5 Expert Advisors (EA) with Express API, database persistence, and MQL5 integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

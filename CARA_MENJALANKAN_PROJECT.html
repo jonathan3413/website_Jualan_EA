@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PANDUAN LENGKAP MENJALANKAN PROJECT EA LICENSE MANAGER</title>
+    <style>
+        :root {
+            --cyan: #00f3ff;
+            --magenta: #ff0055;
+            --bg-dark: #07070a;
+            --card-bg: #0e0e14;
+            --text-color: #e0e0e0;
+            --border-color: #1a1a2e;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace, system-ui, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border: 2px solid var(--cyan);
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        h1 {
+            color: #ffffff;
+            border-bottom: 2px solid var(--cyan);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 0 var(--magenta);
+        }
+
+        h2 {
+            color: var(--cyan);
+            border-left: 4px solid var(--magenta);
+            padding-left: 10px;
+            margin-top: 30px;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            color: #ffffff;
+            margin-top: 20px;
+        }
+
+        p, li {
+            font-size: 14px;
+        }
+
+        .toc {
+            background: #050508;
+            border: 1px solid var(--border-color);
+            padding: 15px 20px;
+            margin-bottom: 30px;
+        }
+
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 6px;
+        }
+
+        .toc a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+            color: var(--magenta);
+        }
+
+        .command-box {
+            background: #000000;
+            border: 1px solid var(--cyan);
+            color: #00ff66;
+            padding: 12px 15px;
+            font-family: monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            border-radius: 2px;
+            overflow-x: auto;
+        }
+
+        .warning-box {
+            background: #2a080c;
+            border: 1px solid var(--magenta);
+            color: #ff99bb;
+            padding: 12px 15px;
+            margin: 15px 0;
+        }
+
+        .info-box {
+            background: #051a24;
+            border: 1px solid var(--cyan);
+            color: #b3f0ff;
+            padding: 12px 15px;
+            margin: 15px 0;
+        }
+
+        .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li::before {
+            content: "✓ ";
+            color: var(--cyan);
+            font-weight: bold;
+        }
+
+        code {
+            background: #1a1a2e;
+            color: var(--cyan);
+            padding: 2px 6px;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 11px;
+            color: #888;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>PANDUAN PEMULA: EA METATRADER 5 LICENSE MANAGER</h1>
+    <p><strong>Sistem Manajemen Lisensi EA MetaTrader 5 Otomatis & Terintegrasi</strong></p>
+    <p>Dokumen ini dibuat khusus untuk pemula yang baru memasuki dunia IT dan coding. Seluruh langkah dijelaskan dengan sederhana, jelas, dan tanpa istilah rumit yang membingungkan.</p>
+
+    <!-- DAFTAR ISI -->
+    <div class="toc">
+        <h3>📋 DAFTAR ISI</h3>
+        <ul>
+            <li><a href="#istilah">1. Memahami Istilah Dasar IT</a></li>
+            <li><a href="#persiapan">2. Persiapan & Install Node.js di Komputer</a></li>
+            <li><a href="#menjalankan-lokal">3. Menjalankan Server di Komputer Lokal (Development)</a></li>
+            <li><a href="#menggunakan-dashboard">4. Menggunakan Website Dashboard Admin</a></li>
+            <li><a href="#github">5. Upload Source Code ke GitHub</a></li>
+            <li><a href="#database-postgres">6. Membuat Database PostgreSQL Gratis di Cloud</a></li>
+            <li><a href="#vercel">7. Deploy Server ke Vercel (Hosting Gratis)</a></li>
+            <li><a href="#mt5-webrequest">8. Konfigurasi WebRequest di MetaTrader 5</a></li>
+            <li><a href="#testing-ea">9. Memasang & Menguji EA Client di MT5</a></li>
+            <li><a href="#maintenance">10. Memperpanjang Lisensi & Backup Database</a></li>
+            <li><a href="#troubleshooting">11. Troubleshooting (Penanganan Masalah Umum)</a></li>
+        </ul>
+    </div>
+
+    <!-- 1. ISTILAH DASAR -->
+    <h2 id="istilah">1. MEMAHAMI ISTILAH DASAR IT</h2>
+    <div class="info-box">
+        <ul>
+            <li><strong>Node.js:</strong> Program di komputer yang bertugas menjalankan kode JavaScript di luar browser (menjadi server backend).</li>
+            <li><strong>npm:</strong> Alat bantu pendownload pustaka/perpustakaan kode yang dibutuhkan oleh Node.js.</li>
+            <li><strong>Database:</strong> Tempat menyimpan data client, nomor lisensi, dan log secara permanen.</li>
+            <li><strong>REST API:</strong> Jalur komunikasi antara EA MetaTrader 5 dan Server website melalui protokol internet (HTTP/HTTPS).</li>
+            <li><strong>Localhost:</strong> Alamat server di komputer sendiri (misal: <code>http://localhost:3000</code>).</li>
+            <li><strong>WebRequest:</strong> Fitur di MetaTrader 5 yang mengizinkan EA mengirim pesan ke internet/server untuk mengecek lisensi.</li>
+            <li><strong>.mq5:</strong> File kode mentah EA yang dibuka di MetaEditor.</li>
+            <li><strong>.ex5:</strong> File program EA hasil kompilasi siap pakai yang diberikan kepada client trading.</li>
+        </ul>
+    </div>
+
+    <!-- 2. PERSIAPAN -->
+    <h2 id="persiapan">2. PERSIAPAN & INSTALL NODE.JS</h2>
+    <ol>
+        <li>Buka website resmi Node.js di browser: <a href="https://nodejs.org" target="_blank" style="color:var(--cyan)">https://nodejs.org</a></li>
+        <li>Download versi <strong>LTS (Recommended for Most Users)</strong>.</li>
+        <li>Buka installer yang terdownload dan klik tombol <em>Next</em> sampai selesai.</li>
+        <li>Buka <strong>Command Prompt (CMD)</strong> di Windows atau Terminal di Mac, lalu ketik perintah berikut untuk memastikan Node.js terinstal:</li>
+    </ol>
+    <div class="command-box">
+        node -v
+    </div>
+    <p><em>Hasil yang diharapkan:</em> Muncul versi Node.js (contoh: <code>v20.11.0</code>).</p>
+
+    <!-- 3. MENJALANKAN LOKAL -->
+    <h2 id="menjalankan-lokal">3. MENJALANKAN SERVER LOKAL</h2>
+    <p>Ikuti langkah berikut untuk menjalankan server di komputer Anda:</p>
+    <ol>
+        <li>Buka folder tempat project ini berada.</li>
+        <li>Klik kanan di area kosong folder → Pilih <strong>Open in Terminal</strong> atau <strong>Open Command Window Here</strong>.</li>
+        <li>Ketik perintah ini untuk mendownload pustaka pendukung:</li>
+    </ol>
+    <div class="command-box">
+        npm install
+    </div>
+    <p><em>Penjelasan:</em> Perintah ini membaca file <code>package.json</code> dan mendownload semua pustaka otomatis.</p>
+
+    <p>4. Jalankan server lokal dengan perintah:</p>
+    <div class="command-box">
+        npm run dev
+    </div>
+    <p><em>Hasil yang diharapkan:</em> Muncul pesan tulisan neon cyan di terminal:<br>
+    <code>⚡ EA LICENSE MANAGEMENT SERVER ACTIVE ON PORT 3000</code><br>
+    <code>Local URL: http://localhost:3000</code></p>
+
+    <!-- 4. DASHBOARD ADMIN -->
+    <h2 id="menggunakan-dashboard">4. MENGGUNAKAN WEBSITE DASHBOARD ADMIN</h2>
+    <ol>
+        <li>Buka browser (Google Chrome atau Edge), lalu ketik alamat: <code>http://localhost:3000</code></li>
+        <li>Halaman Login Admin akan muncul. Gunakan akun demo berikut:
+            <ul>
+                <li>Username: <code>admin</code></li>
+                <li>Password: <code>admin123</code></li>
+            </ul>
+        </li>
+        <li>Setelah login, Anda masuk ke <strong>Command Center</strong>.</li>
+        <li><strong>Cara Membuat Client & Lisensi Baru:</strong>
+            <ul>
+                <li>Klik menu <code>[3.0] CREATE CLIENT</code>.</li>
+                <li>Isi Nama Client (contoh: <em>Ahmad Sudirman</em>).</li>
+                <li>Isi MT5 Account ID (contoh: <em>12345678</em>). Note: Harus sesuai dengan nomor login account MT5 client.</li>
+                <li>Pilih Produk EA (contoh: <em>EA_STRADDLE</em>).</li>
+                <li>Pilih Durasi (Minimal 3 Bulan / 90 hari).</li>
+                <li>Klik tombol <strong>GENERATE & ACTIVATING CLIENT LICENSE NOW</strong>.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <!-- 5. GITHUB -->
+    <h2 id="github">5. UPLOAD SOURCE CODE KE GITHUB</h2>
+    <p>Agar server dapat di-deploy gratis di internet, upload kode ke GitHub:</p>
+    <ol>
+        <li>Buat akun gratis di <a href="https://github.com" target="_blank" style="color:var(--cyan)">https://github.com</a></li>
+        <li>Klik tombol <strong>+ New Repository</strong> di GitHub. Beri nama misal: <code>ea-license-system</code>. Pilih <em>Public</em> atau <em>Private</em>, lalu klik <strong>Create Repository</strong>.</li>
+        <li>Di folder komputer Anda, jalankan perintah ini urut di Terminal/CMD:</li>
+    </ol>
+    <div class="command-box">
+        git init<br>
+        git add .<br>
+        git commit -m "Initial EA License System commit"<br>
+        git branch -M main<br>
+        git remote add origin https://github.com/USERNAME_ANDA/ea-license-system.git<br>
+        git push -u origin main
+    </div>
+    <div class="warning-box">
+        <strong>PENTING (KEAMANAN):</strong> File <code>.gitignore</code> sudah otomatis dipasang sehingga file rahasia <code>.env</code> dan password Anda TIDAK AKAN ikut ter-upload ke GitHub.
+    </div>
+
+    <!-- 6. DATABASE POSTGRES -->
+    <h2 id="database-postgres">6. MEMBUAT DATABASE POSTGRESQL GRATIS</h2>
+    <p>Vercel membutuhkan database cloud permanen agar data client Anda aman disimpan:</p>
+    <ol>
+        <li>Buka penyedia PostgreSQL gratis: <a href="https://neon.tech" target="_blank" style="color:var(--cyan)">Neon.tech</a> atau Supabase.</li>
+        <li>Daftar akun gratis menggunakan akun GitHub Anda.</li>
+        <li>Buat Project Baru bernama <code>ea-license-db</code>.</li>
+        <li>Copy string koneksi (<strong>Connection String</strong>) PostgreSQL yang diberikan. Contoh:<br>
+        <code>postgres://username:password@ep-cool-name.neon.tech/neondb?sslmode=require</code></li>
+    </ol>
+
+    <!-- 7. VERCEL DEPLOY -->
+    <h2 id="vercel">7. DEPLOY SERVER KE VERCEL (HOSTING GRATIS)</h2>
+    <ol>
+        <li>Buka <a href="https://vercel.com" target="_blank" style="color:var(--cyan)">Vercel.com</a> dan Login menggunakan akun GitHub Anda.</li>
+        <li>Klik tombol <strong>Add New Project</strong> → Pilih repository GitHub <code>ea-license-system</code>.</li>
+        <li>Di bagian <strong>Environment Variables</strong>, masukkan 2 variabel berikut:
+            <ul>
+                <li>Nama: <code>DATABASE_URL</code> | Value: <em>(String PostgreSQL dari Neon.tech di atas)</em></li>
+                <li>Nama: <code>JWT_SECRET</code> | Value: <code>kunci_rahasia_bebas_12345</code></li>
+            </ul>
+        </li>
+        <li>Klik <strong>Deploy</strong> dan tunggu 1-2 menit.</li>
+        <li>Setelah selesai, Vercel memberikan URL domain gratis, contoh:<br>
+        <code style="color:var(--cyan)">https://ea-license-system.vercel.app</code></li>
+    </ol>
+
+    <!-- 8. MT5 WEBREQUEST -->
+    <h2 id="mt5-webrequest">8. KONFIGURASI WEBREQUEST DI METATRADER 5</h2>
+    <div class="warning-box">
+        <strong>WAJIB UNTUK CLIENT:</strong> Tanpa langkah ini, MetaTrader 5 akan memblokir komunikasi internet EA dan lisensi akan gagal terverifikasi!
+    </div>
+    <ol>
+        <li>Buka MetaTrader 5 di komputer client.</li>
+        <li>Klik menu <strong>Tools</strong> → <strong>Options</strong> (atau tekan Ctrl + O).</li>
+        <li>Pilih tab <strong>Expert Advisors</strong>.</li>
+        <li>Centang kotak: <strong style="color:#00ff66">"Allow WebRequest for listed URL:"</strong></li>
+        <li>Klik dua kali pada baris kosong di bawahnya, lalu masukkan URL Server Vercel Anda:<br>
+        <code>https://ea-license-system.vercel.app</code><br>
+        <em>(Jika menguji di komputer sendiri gunakan: <code>http://localhost:3000</code>)</em></li>
+        <li>Klik <strong>OK</strong>.</li>
+    </ol>
+
+    <!-- 9. TESTING EA -->
+    <h2 id="testing-ea">9. MEMASANG & MENGUJI EA CLIENT DI MT5</h2>
+    <ol>
+        <li>Buka MetaEditor (tekan F4 di MetaTrader 5).</li>
+        <li>Buka file <code>LicenseTestEA.mq5</code> yang ada di folder project.</li>
+        <li>Klik tombol <strong>Compile</strong> (F7). MetaEditor akan menghasilkan file <code>LicenseTestEA.ex5</code>.</li>
+        <li>Pasang EA pada grafik/chart mana saja di MT5.</li>
+        <li>Isi Input EA:
+            <ul>
+                <li><strong>InpServerURL:</strong> <code>https://ea-license-system.vercel.app</code></li>
+                <li><strong>InpProductCode:</strong> <code>EA_STRADDLE</code></li>
+            </ul>
+        </li>
+        <li>Periksa tab <strong>Experts / Journal</strong> di bagian bawah MT5:
+            <br>
+            <div class="command-box" style="color:#ffffff">
+                [LICENSE VALID] Account 12345678 | Product: EA_STRADDLE | Status: ACTIVE | Expiry: 2026-11-11 | Days Left: 92
+            </div>
+        </li>
+    </ol>
+
+    <!-- 10. MAINTENANCE -->
+    <h2 id="maintenance">10. MEMPERPANJANG LISENSI & BACKUP DATABASE</h2>
+    <p><strong>Memperpanjang Masa Aktif (Extend License):</strong></p>
+    <ul>
+        <li>Di Website Dashboard → Buka menu <code>[2.0] CLIENTS</code>.</li>
+        <li>Klik ikon Jam 🕒 pada baris client.</li>
+        <li>Pilih durasi perpanjangan (1 bulan, 3 bulan, 6 bulan, atau 12 bulan).</li>
+        <li>Jika lisensi masih aktif, perpanjangan ditambahkan dari tanggal kadaluarsa lama. Jika sudah kadaluarsa, dihitung dari tanggal hari ini.</li>
+    </ul>
+
+    <p><strong>Backup Data:</strong> Buka menu <code>[8.0] SETTINGS</code> → Klik <strong>DOWNLOAD DATABASE BACKUP (.JSON)</strong>.</p>
+
+    <!-- 11. TROUBLESHOOTING -->
+    <h2 id="troubleshooting">11. TROUBLESHOOTING (PENANGANAN MASALAH UMUM)</h2>
+    <div class="info-box">
+        <ul>
+            <li><strong>Error MQL5 Code 4014:</strong> WebRequest belum diizinkan. Buka MT5 → Tools → Options → Expert Advisors → Allow WebRequest for listed URL.</li>
+            <li><strong>Status ACCOUNT_NOT_REGISTERED:</strong> Nomor akun MT5 client belum dimasukkan di website admin. Masukkan nomor akun MT5 di menu Create Client.</li>
+            <li><strong>Status LICENSE_EXPIRED:</strong> Masa berlaku lisensi telah habis. Buka menu Clients → Klik Extend License.</li>
+            <li><strong>Status LICENSE_BLOCKED:</strong> Client diblokir oleh admin. Klik tombol Unblock/Activate di menu Clients.</li>
+            <li><strong>Grace Period (Server Offline):</strong> Jika server sementara tidak bisa dihubungi, EA tetap mengizinkan trading selama 24 jam (Grace Period) berdasarkan verifikasi valid terakhir.</li>
+        </ul>
+    </div>
+
+    <!-- CHECKLIST AKHIR -->
+    <h2>✅ CHECKLIST KESIAPAN DEPLOYMENT</h2>
+    <ul class="checklist">
+        <li>Node.js terinstal dan server dapat berjalan lokal.</li>
+        <li>Admin dapat login dan membuat client + lisensi baru.</li>
+        <li>Repository ter-upload rapi di GitHub tanpa menyertakan file sensitif.</li>
+        <li>Database PostgreSQL gratis terhubung di Vercel.</li>
+        <li>MetaTrader 5 sudah mengizinkan WebRequest URL server.</li>
+        <li>EA <code>.ex5</code> terverifikasi VALID saat dikoneksikan ke server!</li>
+    </ul>
+
+    <footer>
+        MT5 EA LICENSE MANAGEMENT SYSTEM &copy; 2026 — Dibuat untuk Kemudahan Penjualan EA MetaTrader 5
+    </footer>
+</div>
+
+</body>
+</html>

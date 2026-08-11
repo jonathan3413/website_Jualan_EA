@@ -1,0 +1,154 @@
+================================================================================
+PANDUAN LENGKAP MENJALANKAN PROJECT EA METATRADER 5 LICENSE MANAGER
+================================================================================
+Sistem Manajemen Lisensi EA MetaTrader 5 Otomatis & Terintegrasi REST API
+Format: Plain Text Guide (Bisa dibuka di Notepad / Text Editor)
+
+================================================================================
+1. MEMAHAMI ISTILAH DASAR IT (UNTUK PEMULA)
+================================================================================
+- Node.js : Program komputer yang bertugas menjalankan kode JavaScript di luar browser
+            sehingga berfungsi sebagai server backend.
+- npm     : Tool pembantu untuk mengunduh pustaka (package) yang dibutuhkan oleh Node.js.
+- Database: Tempat menyimpan data client, nomor akun MT5, lisensi, dan log secara permanen.
+- REST API: Jalur komunikasi antara EA MetaTrader 5 dengan Server Website via HTTP/HTTPS.
+- Localhost: Alamat server di komputer sendiri (contoh: http://localhost:3000).
+- WebRequest: Fitur di MetaTrader 5 untuk mengizinkan EA berkomunikasi dengan server internet.
+- .mq5    : File kode mentah MQL5 yang dapat diedit dan dikompilasi di MetaEditor.
+- .ex5    : File program EA hasil kompilasi siap pakai untuk didistribusikan ke client.
+
+================================================================================
+2. PERSIAPAN & INSTALL NODE.JS DI KOMPUTER
+================================================================================
+Langkah-langkah:
+1. Buka browser dan kunjungi https://nodejs.org
+2. Download versi "LTS" (Recommended for Most Users).
+3. Jalankan file installer yang terunduh, klik "Next" sampai selesai.
+4. Buka Command Prompt (CMD) di Windows, ketik perintah:
+   
+   node -v
+
+5. Jika berhasil, akan muncul versi Node.js (misal: v20.11.0).
+
+================================================================================
+3. MENJALANKAN SERVER LOKAL (DEVELOPMENT)
+================================================================================
+1. Buka folder project ini di komputer Anda.
+2. Buka Command Prompt / Terminal di folder tersebut.
+3. Jalankan perintah untuk menginstall pustaka pendukung:
+
+   npm install
+
+   (Perintah ini membaca package.json dan mendownload semua modul otomatis)
+
+4. Jalankan server lokal:
+
+   npm run dev
+
+5. Hasil yang diharapkan:
+   Server aktif di port 3000:
+   Local URL: http://localhost:3000
+   EA API Verification: http://localhost:3000/api/license/verify
+
+================================================================================
+4. MENGGUNAKAN WEBSITE DASHBOARD ADMIN
+================================================================================
+1. Buka browser (Google Chrome / Edge) dan akses: http://localhost:3000
+2. Login Admin menggunakan akun demo:
+   - Username: admin
+   - Password: admin123
+3. Menu Dashboard Utama:
+   - Dashboard      : Ringkasan statistik client, lisensi aktif, dan log verifikasi EA.
+   - Clients        : Daftar semua client, status lisensi, dan sisa hari.
+   - Create Client  : Form untuk mendaftarkan client baru dan lisensi EA.
+   - Products       : Pendaftaran kode produk EA (contoh: EA_STRADDLE).
+   - Verify Logs    : Rekam jejak semua panggilan API verifikasi dari EA.
+   - EA Code        : Source code MQL5 (LicenseTestEA.mq5).
+   - Guides         : Panduan cara menjalankan project.
+   - Settings       : Ubah password admin & download backup database.
+
+================================================================================
+5. UPLOAD SOURCE CODE KE GITHUB (VERSI VERSION CONTROL)
+================================================================================
+1. Buat akun gratis di https://github.com
+2. Buat Repository Baru di GitHub dengan nama: ea-license-system
+3. Di folder komputer Anda, jalankan perintah git berikut di Command Prompt:
+
+   git init
+   git add .
+   git commit -m "Initial EA License System commit"
+   git branch -M main
+   git remote add origin https://github.com/USERNAME_ANDA/ea-license-system.git
+   git push -u origin main
+
+   *PENTING: File .gitignore sudah terpasang sehingga password dan .env tidak akan ikut terupload.
+
+================================================================================
+6. MEMBUAT DATABASE POSTGRESQL GRATIS DI CLOUD
+================================================================================
+1. Daftar akun gratis di https://neon.tech atau Supabase.
+2. Buat Project Baru bernama: ea-license-db
+3. Copy Connection String PostgreSQL yang diberikan (Connection String).
+   Contoh: postgres://username:password@ep-cool-name.neon.tech/neondb?sslmode=require
+
+================================================================================
+7. DEPLOY SERVER KE VERCEL (HOSTING GRATIS)
+================================================================================
+1. Buka https://vercel.com dan Login menggunakan akun GitHub.
+2. Klik "Add New Project" -> Import repository "ea-license-system".
+3. Pada bagian "Environment Variables", tambahkan:
+   - DATABASE_URL = (Paste string connection PostgreSQL dari Neon.tech)
+   - JWT_SECRET   = rahasia_jwt_lisensi_ea_2026
+4. Klik tombol "Deploy".
+5. Setelah 1 menit, Vercel akan memberikan URL resmi, contoh:
+   https://ea-license-system.vercel.app
+
+================================================================================
+8. KONFIGURASI WEBREQUEST DI METATRADER 5 (WAJIB DILAKUKAN CLIENT)
+================================================================================
+Agar EA dapat mengecek lisensi ke server, izinkan WebRequest di MT5 client:
+1. Buka MetaTrader 5.
+2. Klik menu Tools -> Options (atau tekan Ctrl + O).
+3. Buka tab "Expert Advisors".
+4. Centang kotak "Allow WebRequest for listed URL:".
+5. Tambahkan URL server Anda:
+   https://ea-license-system.vercel.app
+   (Jika menguji di komputer sendiri, gunakan: http://localhost:3000)
+6. Klik OK.
+
+================================================================================
+9. MEMASANG & MENGUJI EA CLIENT DI METATRADER 5
+================================================================================
+1. Buka MetaEditor di MT5 (tekan F4).
+2. Buka file LicenseTestEA.mq5 dari folder ea/
+3. Klik tombol Compile (F7). MetaEditor menghasilkan file LicenseTestEA.ex5.
+4. Buka MT5, attach EA LicenseTestEA ke chart trading mana saja.
+5. Isi Input Parameter EA:
+   - InpServerURL   : https://ea-license-system.vercel.app
+   - InpProductCode : EA_STRADDLE
+6. Lihat di tab Experts / Journal bagian bawah MT5:
+   
+   [LICENSE VALID] Account 12345678 | Product: EA_STRADDLE | Status: ACTIVE | Expiry: 2026-11-11 | Days Left: 92
+
+   *Jika nomor akun MT5 tidak terdaftar di website admin:
+   [LICENSE INVALID] Account 99999999 | Status: INVALID | Reason: ACCOUNT_NOT_REGISTERED
+   -> TRADING AUTOMATIS DIBLOKIR
+
+================================================================================
+10. PERPANJANG LISENSI & BACKUP DATABASE
+================================================================================
+- Extend License: Di Dashboard Admin -> Menu Clients -> Klik ikon Jam 🕒 pada client -> Pilih durasi 1, 3, 6, atau 12 bulan.
+- Change Account ID: Klik ikon Kunci 🔑 -> Masukkan ID MT5 baru. ID lama otomatis tidak valid.
+- Block Client: Klik ikon Ban 🚫 -> Status berubah menjadi BLOCKED. EA menolak trading secara real-time.
+- Backup Data: Buka Menu Settings -> Klik "DOWNLOAD DATABASE BACKUP (.JSON)".
+
+================================================================================
+11. TROUBLESHOOTING & GRACE PERIOD
+================================================================================
+- WebRequest Error 4014 : WebRequest belum diizinkan di MT5 (Lihat poin 8).
+- Grace Period (24 Jam)  : Jika server Vercel/Internet mati sementara, EA yang pernah valid tetap dapat trading hingga 24 jam (Grace Period).
+- Vercel Serverless     : Server dirancang stateless & dapat menangani ribuan panggilan verifikasi dari EA tanpa biaya (Free Tier).
+
+================================================================================
+Dibuat dengan cermat untuk sistem penjualan EA MetaTrader 5 Pro.
+================================================================================
